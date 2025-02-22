@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magical Christmas Card</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('snoy.gif') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #card {
+            width: 90%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            color: #333;
+        }
+
+        #card::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            right: -50px;
+            bottom: -50px;
+            background: url('christmaspattern.webp');
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        #card h1 {
+            font-size: 2.5em;
+            color: #d32f2f;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .button {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 12px 24px;
+            background: #d32f2f;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .button:hover {
+            background: #b71c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+
+        #surprises {
+            display: none;
+        }
+
+        .surprise {
+            margin: 25px 0;
+            padding: 20px;
+            background: #f5f5f5;
+            color: #333;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #treasure-map .video-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            overflow-y: auto;
+            padding-bottom: 0;
+        }
+
+        #treasure-map .video-container iframe {
+            position: static;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9;
+        }
+
+        #note-container {
+            position: relative;
+            min-height: 100px;
+        }
+
+        #typed-note {
+            min-height: 60px;
+            font-size: 18px;
+            color: #d32f2f;
+            font-weight: bold;
+            text-align: left;
+            white-space: pre-wrap;
+        }
+
+        #treasure-map {
+            width: 100%;
+            height: 200px;
+            background: url('treasuremap.webp') no-repeat center center;
+            background-size: cover;
+            position: relative;
+            cursor: pointer;
+        }
+
+        #treasure-spot {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: rgba(255,0,0,0.5);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+        }
+
+        .surprise-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .surprise-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div id="card">
+        <h1>Merry Christmas, Leny Joy Alboria!</h1>
+        <p>This Christmas, I made something special for you. Click below to open your card!</p>
+        <button class="button" onclick="revealSurprises()">Open Card</button>
+
+        <div id="surprises">
+            <div class="surprise surprise-item">
+                <h2>🎄 Memory #1: Our Date</h2>
+                <div class="video-container">
+                    <iframe src="vid.mp4" frameborder="0" allow="autoplay" loop></iframe>
+                </div>
+                <p>Our date at Cebu IT Park, Every moment with you is a treasure. ❤️</p>
+            </div>
+            <div class="surprise surprise-item">
+                <h2>🎁 A Little Note</h2>
+                <div id="note-container">
+                    <p id="typed-note"></p>
+                </div>
+            </div>
+            <div class="surprise surprise-item">
+                <h2>✨ Hidden Treasure</h2>
+                <p>Nakoy g hide. find the red dot!</p>
+                <div id="treasure-map">
+                    <div id="treasure-spot" onclick="revealTreasure()"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function revealSurprises() {
+            const surprises = document.getElementById('surprises');
+            surprises.style.display = 'block';
+            
+            const surpriseItems = document.querySelectorAll('.surprise-item');
+            surpriseItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.classList.add('visible');
+                    if (index === 1) { // Index 1 is the "A Little Note" surprise
+                        typeNote();
+                    }
+                }, index * 500);
+            });
+        }
+
+        function typeNote() {
+            const note = "Leny Joy, ur my greatest gift, making every day magical, especially during Christmas, you're my forever wish come true.";
+            const typedNote = document.getElementById('typed-note');
+            let i = 0;
+            
+            function typeWriter() {
+                if (i < note.length) {
+                    typedNote.innerHTML += note.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 50); // Adjust typing speed here
+                }
+            }
+            
+            typeWriter();
+        }
+
+        function revealTreasure() {
+            const treasureMap = document.getElementById('treasure-map');
+            treasureMap.innerHTML = `
+                <div class="video-container">
+                    <iframe src="christmaskisses.gif" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    <p style="color: white; padding: 10px;">Merry Christmas, Leny Joy! Here's a special message for you.</p>
+                    <p style="color: white; padding: 10px;">I'm grateful for every moment we share. This Christmas, I want you to know how much you mean to me. You're my greatest talaga haytsss, and I cherish you always.</p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
+
